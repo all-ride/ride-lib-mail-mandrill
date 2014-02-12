@@ -11,7 +11,8 @@
     ],
     "require": {
         "mandrill/mandrill": "1.0.48",
-        "pallo/lib-log": ">=0.2.0"
+        "pallo/lib-log": ">=0.2.0",
+        "pallo/lib-mail": ">=0.1.0"
     },
     "autoload": {
         "psr-0": {
