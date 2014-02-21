@@ -1,3 +1,3 @@
-# Pallo: Mail Library (Mandrill)
+# Ride: Mail Library (Mandrill)
 
-Mandrill implementation for the mail library of the PHP Pallo framework.
+Mandrill implementation for the mail library of the PHP Ride framework.
