@@ -1,11 +1,11 @@
 <?php
 
-namespace pallo\library\mail\transport;
+namespace ride\library\mail\transport;
 
-use pallo\library\log\Log;
-use pallo\library\mail\exception\MailException;
-use pallo\library\mail\MandrillMailMessage;
-use pallo\library\mail\MailMessage;
+use ride\library\log\Log;
+use ride\library\mail\exception\MailException;
+use ride\library\mail\MandrillMailMessage;
+use ride\library\mail\MailMessage;
 
 use \Exception;
 use \Mandrill_Messages;
@@ -55,7 +55,7 @@ class MandrillTransport extends AbstractTransport {
 
     /**
      * Creates a mail message
-     * @return pallo\library\mail\MailMessage
+     * @return ride\library\mail\MailMessage
      */
     public function createMessage() {
         return new MandrillMailMessage();
@@ -63,9 +63,9 @@ class MandrillTransport extends AbstractTransport {
 
     /**
      * Deliver a mail message to the Mandrill API
-     * @param pallo\library\mail\MailMessage $message Message to send
+     * @param ride\library\mail\MailMessage $message Message to send
      * @return null
-     * @throws pallo\library\mail\exception\MailException when the message could
+     * @throws ride\library\mail\exception\MailException when the message could
      * not be delivered
      */
     public function send(MailMessage $message) {

@@ -1,8 +1,8 @@
 <?php
 
-namespace pallo\library\mail;
+namespace ride\library\mail;
 
-use pallo\library\mail\exception\MailException;
+use ride\library\mail\exception\MailException;
 
 /**
  * A Mandrill email message
