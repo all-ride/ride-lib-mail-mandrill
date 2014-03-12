@@ -100,13 +100,13 @@ class MandrillTransport extends AbstractTransport {
                 }
 
                 $cc = $message->getCc();
-                if ($cc) {
-                    $struct['headers']['Cc'] = implode(', ', $cc);
+                foreach ($cc as $address) {
+                    $struct['to'][] = $this->getAddress($address, 'cc');
                 }
 
                 $bcc = $message->getBcc();
-                if ($bcc) {
-                    $struct['headers']['Bcc'] = implode(', ', $bcc);
+                foreach ($bcc as $address) {
+                    $struct['to'][] = $this->getAddress($address, 'bcc');
                 }
             }
 
@@ -117,7 +117,7 @@ class MandrillTransport extends AbstractTransport {
 
             $returnPath = $message->getReturnPath();
             if ($returnPath) {
-                $struct['headers']['Reply-Path'] = (string) $returnPath;
+                $struct['headers']['Return-Path'] = (string) $returnPath;
             }
 
             // set body
@@ -217,7 +217,7 @@ class MandrillTransport extends AbstractTransport {
     /**
      * Gets the addresses in Mandrill format
      * @param MailAddress|array $addresses Array with MailAddress instances
-     * @return array Array with a address struct
+     * @return array Array of address structs
      */
     protected function getAddresses($addresses) {
         if (!is_array($addresses)) {
@@ -227,15 +227,29 @@ class MandrillTransport extends AbstractTransport {
         $result = array();
 
         foreach ($addresses as $address) {
-            $r = array(
-                'email' => $address->getEmailAddress(),
-            );
+            $result[] = $this->getAddress($address);
+        }
 
-            if ($address->getDisplayName()) {
-                $r['name'] = $address->getDisplayName();
-            }
+        return $result;
+    }
 
-            $result[] = $r;
+    /**
+     * Gets an address struct
+     * @param \ride\library\mail\MailAddress $address
+     * @param string $type
+     * @return array Address struct
+     */
+    protected function getAddress($address, $type = null) {
+        $result = array(
+            'email' => $address->getEmailAddress(),
+        );
+
+        if ($address->getDisplayName()) {
+            $result['name'] = $address->getDisplayName();
+        }
+
+        if ($type) {
+            $result['type'] = $type;
         }
 
         return $result;
