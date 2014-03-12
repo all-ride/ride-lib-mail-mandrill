@@ -2,8 +2,6 @@
 
 namespace ride\library\mail;
 
-use ride\library\mail\exception\MailException;
-
 /**
  * A Mandrill email message
  */
