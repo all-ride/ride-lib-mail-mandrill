@@ -55,7 +55,7 @@ class MandrillTransport extends AbstractTransport {
 
     /**
      * Creates a mail message
-     * @return ride\library\mail\MailMessage
+     * @return \ride\library\mail\MailMessage
      */
     public function createMessage() {
         return new MandrillMailMessage();
@@ -63,9 +63,9 @@ class MandrillTransport extends AbstractTransport {
 
     /**
      * Deliver a mail message to the Mandrill API
-     * @param ride\library\mail\MailMessage $message Message to send
+     * @param \ride\library\mail\MailMessage $message Message to send
      * @return null
-     * @throws ride\library\mail\exception\MailException when the message could
+     * @throws \ride\library\mail\exception\MailException when the message could
      * not be delivered
      */
     public function send(MailMessage $message) {
