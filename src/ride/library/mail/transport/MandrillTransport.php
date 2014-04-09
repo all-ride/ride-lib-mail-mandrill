@@ -4,8 +4,9 @@ namespace ride\library\mail\transport;
 
 use ride\library\log\Log;
 use ride\library\mail\exception\MailException;
-use ride\library\mail\MandrillMailMessage;
+use ride\library\mail\MailAddress;
 use ride\library\mail\MailMessage;
+use ride\library\mail\MandrillMailMessage;
 
 use \Exception;
 use \Mandrill_Messages;
@@ -55,7 +56,7 @@ class MandrillTransport extends AbstractTransport {
 
     /**
      * Creates a mail message
-     * @return ride\library\mail\MailMessage
+     * @return \ride\library\mail\MailMessage
      */
     public function createMessage() {
         return new MandrillMailMessage();
@@ -63,9 +64,9 @@ class MandrillTransport extends AbstractTransport {
 
     /**
      * Deliver a mail message to the Mandrill API
-     * @param ride\library\mail\MailMessage $message Message to send
+     * @param \ride\library\mail\MailMessage $message Message to send
      * @return null
-     * @throws ride\library\mail\exception\MailException when the message could
+     * @throws \ride\library\mail\exception\MailException when the message could
      * not be delivered
      */
     public function send(MailMessage $message) {
@@ -112,12 +113,14 @@ class MandrillTransport extends AbstractTransport {
 
             $replyTo = $message->getReplyTo();
             if ($replyTo) {
-                $struct['headers']['Reply-To'] = (string) $replyTo;
+                $replyTo = new MailAddress($replyTo);
+                $struct['headers']['Reply-To'] = $replyTo->getEmailAddress();
             }
 
             $returnPath = $message->getReturnPath();
             if ($returnPath) {
-                $struct['headers']['Return-Path'] = (string) $returnPath;
+                $returnPath = new MailAddress($returnPath);
+                $struct['headers']['Return-Path'] = $returnPath->getEmailAddress();
             }
 
             // set body
