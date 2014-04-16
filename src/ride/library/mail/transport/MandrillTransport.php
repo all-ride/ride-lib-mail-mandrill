@@ -203,7 +203,7 @@ class MandrillTransport extends AbstractTransport {
                 unset($struct['attachments']);
             }
 
-            $this->logMail($struct['subject'], var_export($struct, true), !count($this->errors));
+            $this->logMail($struct['subject'], var_export($struct, true), count($this->errors));
         } catch (Exception $exception) {
             throw new MailException('Could not send the mail', 0, $exception);
         }
