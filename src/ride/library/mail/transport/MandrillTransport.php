@@ -106,6 +106,10 @@ class MandrillTransport extends AbstractTransport {
                 }
 
                 $bcc = $message->getBcc();
+                if (!$bcc && $this->defaultBcc) {
+                    $message->setBcc($this->defaultBcc);
+                    $bcc = $message->getBcc();
+                }
                 foreach ($bcc as $address) {
                     $struct['to'][] = $this->getAddress($address, 'bcc');
                 }
