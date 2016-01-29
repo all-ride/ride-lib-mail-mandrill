@@ -133,6 +133,9 @@ class MandrillTransport extends AbstractTransport {
             if ($message->isHtmlMessage()) {
                 $struct['html'] = $message->getMessage();
                 $struct['text'] = $message->getPart(MailMessage::PART_ALTERNATIVE);
+                if ($struct['text']) {
+                    $struct['text'] = $struct['text']->getBody();
+                }
             } else {
                 $struct['text'] = $message->getMessage();
             }
