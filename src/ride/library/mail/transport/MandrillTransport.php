@@ -116,6 +116,10 @@ class MandrillTransport extends AbstractTransport {
             }
 
             $replyTo = $message->getReplyTo();
+            if (!$replyTo && $this->defaultReplyTo) {
+                $replyTo = $this->defaultReplyTo;
+            }
+
             if ($replyTo) {
                 $replyTo = new MailAddress($replyTo);
                 $struct['headers']['Reply-To'] = $replyTo->getEmailAddress();
