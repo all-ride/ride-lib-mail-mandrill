@@ -215,6 +215,10 @@ class MandrillTransport extends AbstractTransport {
             }
 
             $this->logMail($struct['subject'], var_export($struct, true), count($this->errors));
+
+            if (count($this->errors)) {
+                throw new MailException('Errors occured while sending the message, check getErrors() for details.');
+            }
         } catch (Exception $exception) {
             throw new MailException('Could not send the mail', 0, $exception);
         }
