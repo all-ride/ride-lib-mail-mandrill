@@ -2,7 +2,7 @@
     "name": "ride/lib-mail-mandrill",
     "description": "Mandrill implementation for the mail library of the Ride framework",
     "license": "MIT",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "authors": [
         {
             "name": "Joris Vandeweerd",
