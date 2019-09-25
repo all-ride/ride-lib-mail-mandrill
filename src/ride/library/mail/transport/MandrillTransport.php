@@ -195,11 +195,16 @@ class MandrillTransport extends AbstractTransport {
             $result = $mailer->send($struct);
 
             $this->errors = array();
+            $errorDescription = '';
             foreach ($result as $recipientResult) {
                 if ($recipientResult['status'] == 'rejected') {
                     $this->errors[$recipientResult['email']] = 'Rejected: ' . $recipientResult['reject_reason'];
+
+                    $errorDescription .= ($errorDescription ? '; ' : '') . $recipientResult['email'] . ': ' . $recipientResult['reject_reason'];
                 } elseif ($recipientResult['status'] == 'invalid') {
                     $this->errors[$recipientResult['email']] = 'Invalid';
+
+                    $errorDescription .= ($errorDescription ? '; ' : '') . $recipientResult['email'] . ': invalid address';
                 }
             }
 
@@ -217,7 +222,7 @@ class MandrillTransport extends AbstractTransport {
             $this->logMail($struct['subject'], var_export($struct, true), count($this->errors));
 
             if (count($this->errors)) {
-                throw new MailException('Errors occured while sending the message, check getErrors() for details.');
+                throw new MailException('Errors returned from the server: ' . $errorDescription);
             }
         } catch (Exception $exception) {
             throw new MailException('Could not send the mail', 0, $exception);
