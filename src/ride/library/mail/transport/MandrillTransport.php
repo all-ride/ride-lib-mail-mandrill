@@ -90,29 +90,31 @@ class MandrillTransport extends AbstractTransport {
             }
 
             // set recipient
+            $to = $message->getTo();
+            if ($to) {
+                $struct['to'] = $this->getAddresses($to);
+            }
+
+            $cc = $message->getCc();
+            foreach ($cc as $address) {
+                $struct['to'][] = $this->getAddress($address, 'cc');
+            }
+
+            if ($this->defaultBcc) {
+                $message->addBcc($this->defaultBcc);
+            }
+
+            $bcc = $message->getBcc();
+            foreach ($bcc as $address) {
+                $struct['to'][] = $this->getAddress($address, 'bcc');
+            }
+
             if ($this->debugTo) {
+                $originalRecipients = $struct['to'];
+
                 $struct['to'] = array(
                     array('email' => $this->debugTo),
                 );
-            } else {
-                $to = $message->getTo();
-                if ($to) {
-                    $struct['to'] = $this->getAddresses($to);
-                }
-
-                $cc = $message->getCc();
-                foreach ($cc as $address) {
-                    $struct['to'][] = $this->getAddress($address, 'cc');
-                }
-
-                if ($this->defaultBcc) {
-                    $message->addBcc($this->defaultBcc);
-                }
-
-                $bcc = $message->getBcc();
-                foreach ($bcc as $address) {
-                    $struct['to'][] = $this->getAddress($address, 'bcc');
-                }
             }
 
             $replyTo = $message->getReplyTo();
@@ -142,6 +144,27 @@ class MandrillTransport extends AbstractTransport {
                 }
             } else {
                 $struct['text'] = $message->getMessage();
+            }
+
+            if ($this->debugTo) {
+                if (isset($struct['html'])) {
+                    $html = '<div style="padding: 15px; margin: 25px 50px; border: 1px solid red; color: red; background-color: #FFC">';
+                    $html .= 'This mail is sent in debug mode. The original recipients are: <ul>';
+                    foreach ($originalRecipients as $originalRecipient) {
+                        $html .= '<li>' . $originalRecipient['email'] . (isset($originalRecipient['type']) ? ' (' . $originalRecipient['type'] . ')' : '') . '</li>';
+                    }
+                    $html .= '</div>';
+
+                    $struct['html'] = $html . $struct['html'];
+                }
+
+                $text = "\n\nThis mail is sent in debug mode. The original recipients are: \n";
+                foreach ($originalRecipients as $originalRecipient) {
+                    $text .= '- ' . $originalRecipient['email'] . (isset($originalRecipient['type']) ? ' (' . $originalRecipient['type'] . ')' : '') . "\n";
+                }
+                $text .= "\n\n";
+
+                $struct['text'] = $text . $struct['text'];
             }
 
             // add attachments
